@@ -1,29 +1,48 @@
-const formId = document.location.search.match(/post=(\d+)/)?.[1];
-const url: string = `/wp-json/cf7lms/v1/new-step?id=${formId}`;
+interface ResponseData {
+    success: boolean;
+    html: string;
+    message?: string;
+}
 
-// Fetch the new HTML from the server.
-// set timeout to 1 second to simulate a slow connection.
-setTimeout(() => {
-    fetch(url)
+document.querySelector('.cf7lms-add-step')?.addEventListener('click', (e: Event) => {
+    e.preventDefault();
+    const url = new URL(window.location.href);
+    const postId = url.searchParams.get("post");
+
+    // Create a new FormData instance
+    const formData = new FormData();
+
+    // Append each piece of data
+    formData.append('action', 'add_new_step');
+    formData.append('form_id', postId || '');
+    formData.append('nonce', cf7lms.nonce);
+
+    fetch(ajaxurl, {
+        method: 'POST',
+        body: formData
+    })
         .then((response: Response) => {
-            // Check that the request was successful.
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error('Network response was not ok');
             }
-            return response.text();
+            return response.json() as Promise<ResponseData>;
         })
-        .then((html: string) => {
-            // Create a new element from the HTML.
-            const newSection: HTMLDivElement = document.createElement('div');
-            newSection.innerHTML = html;
-
-            // Insert the new section into the page.
-            const container: HTMLElement | null = document.querySelector('.cf7mls-wrap-form');
-            if (container) {
-                container.appendChild(newSection);
+        .then((resp: ResponseData) => {
+            if (resp.success) {
+                console.log(resp);
+                const formContainer: HTMLElement | null = document.querySelector('.cf7lms-step-wrapper');
+                let wrap = document.createElement('div');
+                // append wrap after formContainer
+                formContainer?.parentNode?.insertBefore(wrap, formContainer.nextSibling);
+                if (formContainer?.parentNode) {
+                    wrap.appendChild(formContainer.cloneNode(true));
+                }
+            } else {
+                // Handle error
+                console.error(resp);
             }
         })
-        .catch((e: Error) => {
-            console.error('Error: ' + e.message);
+        .catch((error: Error) => {
+            console.error('Request error...', error);
         });
-}, 10000);
+});

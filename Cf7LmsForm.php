@@ -18,27 +18,40 @@
 
 	require_once __DIR__ . '/vendor/autoload.php';
 
-	// use singleton
-
-	use Onereach\Cf7LmsForm\Admin\DependencyCheck;
-	use Onereach\Cf7LmsForm\Admin\RegisterApiRoute;
+	use JetBrains\PhpStorm\NoReturn;
 	use Onereach\Cf7LmsForm\Traits\Singleton;
+	use Onereach\Cf7LmsForm\Admin\DependencyCheck;
+	use Onereach\Cf7LmsForm\Admin\FormGenerator;
+	use Onereach\Cf7LmsForm\Admin\FormTemplate;
 	use Onereach\Cf7LmsForm\EnqueueAssets;
+	use Onereach\Cf7LmsForm\Utilities\AddNewStepCommand;
+	use Onereach\Cf7LmsForm\Admin\AjaxController;
 
 	class Cf7LmsForm {
 
 		use Singleton;
 
-		private RegisterApiRoute $registerApiRoute;
+		// private RegisterApiRoute $registerApiRoute;
 		private EnqueueAssets $enqueueAssets;
-
-		private \stdClass $admin;
+		private FormTemplate $formTemplate;
 
 		protected function init(): void {
 			$this->setupConstants();
 			$this->dependencyCheck();
-			$this->registerApiRoute = RegisterApiRoute::instance();
+			// $this->registerApiRoute = RegisterApiRoute::instance();
 			$this->enqueueAssets = EnqueueAssets::instance();
+			$this->formTemplate  = FormTemplate::instance();
+			$this->ajaxSetup();
+		}
+
+		/**
+		 * @return void
+		 */
+		#[NoReturn] private function ajaxSetup(): void {
+			$formGenerator     = new FormGenerator();
+			$addNewStepCommand = new AddNewStepCommand( $formGenerator );
+			$ajaxController    = new AjaxController( $addNewStepCommand );
+			$ajaxController->registerEndpoints();
 		}
 
 		private function setupConstants(): void {
@@ -63,9 +76,6 @@
 			}
 		}
 
-		private function includes(): void {
-		}
-
 		/**
 		 * @return void
 		 */
@@ -73,10 +83,10 @@
 			$dependencyChecker = DependencyCheck::instance();
 
 			$pluginsToCheck = [
-				'contact-form-7/wp-contact-form-7.php' => ['label' => 'Contact Form 7'],
+				'contact-form-7/wp-contact-form-7.php' => [ 'label' => 'Contact Form 7' ],
 			];
-			$dependencyChecker->setDependencies($pluginsToCheck);
-			$dependencyChecker->setMessage('The following plugins are required but not currently active:');
+			$dependencyChecker->setDependencies( $pluginsToCheck );
+			$dependencyChecker->setMessage( 'The following plugins are required but not currently active:' );
 			$dependencyChecker->checkInactivePluginDependency();
 		}
 

@@ -29,7 +29,7 @@
 
 		public function generateNewSectionEndpoint( WP_REST_REQUEST $request ): WP_REST_Response {
 			try {
-				$instance = new FormGenerator();
+				$instance = new FormTemplate();
 				// print request params to debug in error log
 				$form_id = $request->get_params()['id'];
 				$post    = get_post( $form_id );

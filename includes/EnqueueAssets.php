@@ -1,6 +1,7 @@
 <?php
 
 	namespace Onereach\Cf7LmsForm;
+
 	use Onereach\Cf7LmsForm\Traits\Singleton;
 
 	class EnqueueAssets {
@@ -8,7 +9,8 @@
 		use Singleton;
 
 		protected function init(): void {
-			$this->registerScriptsAndStyles();
+			add_action( 'wp_enqueue_scripts', [ $this, 'registerFrontendScriptsAndStyles' ] );
+			add_action( 'admin_enqueue_scripts', [ $this, 'registerAdminScriptsAndStyles' ] );
 		}
 
 		public function registerScriptsAndStyles(): void {
@@ -19,14 +21,18 @@
 			}
 		}
 
-		private function registerAdminScriptsAndStyles(): void {
+		public function registerAdminScriptsAndStyles(): void {
 			if ( $this->isAdminWPCF7Page() ) {
 				$this->enqueueScript( 'admin-cf7-lms-form', 'admin/index.js' );
+				$this->localizeScript( 'admin-cf7-lms-form', 'cf7lms', [
+					'url'   => admin_url( 'admin-ajax.php' ),
+					'nonce' => wp_create_nonce( 'add_new_step' )
+				] );
 				$this->enqueueStyle( 'admin-cf7-lms-form', 'admin/index.css' );
 			}
 		}
 
-		private function registerFrontendScriptsAndStyles(): void {
+		public function registerFrontendScriptsAndStyles(): void {
 			$this->enqueueScript( 'front-cf7-lms-form', 'index.js' );
 			$this->enqueueStyle( 'front-cf7-lms-form', 'index.css' );
 		}
@@ -43,4 +49,7 @@
 			wp_enqueue_style( $handle, CF7_LMS_PLUGIN_ASSETS . $path, [], '1.0.0', 'all' );
 		}
 
+		private function localizeScript( string $handle, string $name, array $data ): void {
+			wp_localize_script( $handle, $name, $data );
+		}
 	}

@@ -32,11 +32,13 @@
 		}
 
 		protected function generateTextArea( $post ): string {
-			if ( ! isset( $post->form ) ) {
+			// print $post to debug in error log
+
+			if ( ! isset( $post['_form'] ) ) {
 				throw new UnexpectedValueException( 'Post has no form property' );
 			}
 
-			return esc_textarea( $post->prop( 'form' ) );
+			return esc_textarea( $post['_form'][0] );
 		}
 
 		public function generateNewHtmlSection( $post ): string {
