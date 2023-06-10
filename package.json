@@ -1,0 +1,39 @@
+{
+    "name": "cf7-lms-form",
+    "version": "1.0.0",
+    "source": [
+        "assets/index.ts",
+        "assets/style.scss",
+        "assets/admin/index.ts",
+        "assets/admin/index.scss"
+    ],
+    "main": "dist/main.js",
+    "types": "dist/types.d.ts",
+    "devDependencies": {
+        "@parcel/packager-ts": "2.6.2",
+        "@parcel/transformer-typescript-types": "2.6.2",
+        "@parcel/transformer-sass": "^2.6.2",
+        "@types/jquery": "^3.5.14",
+        "parcel": "^2.6.2",
+        "typescript": ">=3.0.0"
+    },
+    "scripts": {
+        "watch": "parcel watch",
+        "build": "parcel build",
+        "check": "tsc --noEmit"
+    },
+    "targets": {
+        "modern": {
+            "source": [
+                "assets/index.ts",
+                "assets/style.scss",
+                "assets/admin/index.ts",
+                "assets/admin/index.scss"
+            ],
+            "distDir": "dist",
+            "engines": {
+                "browsers": "Chrome 100"
+            }
+        }
+    }
+}

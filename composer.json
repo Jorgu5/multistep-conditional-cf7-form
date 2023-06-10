@@ -1,0 +1,17 @@
+{
+    "name": "onereach/cf7-lms-form",
+    "description": "An addon for contact form 7 that supports new user journey",
+    "type": "plugin",
+    "autoload": {
+        "psr-4": {
+            "Onereach\\Cf7LmsForm\\": "includes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tomek",
+            "email": "tomek.sobolewski@onereach.com"
+        }
+    ],
+    "require": {}
+}

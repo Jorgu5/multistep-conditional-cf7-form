@@ -1,0 +1,9 @@
+.parcel-cache
+/dist
+.idea
+vendor/
+yarn-error.log
+yarn.lock
+node_modules
+.DS_Store
+.env
