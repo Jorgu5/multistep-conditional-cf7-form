@@ -6,6 +6,13 @@
 	use WPCF7_TagGenerator;
 
 	class FormGenerator extends AbstractFormGenerator {
+		/**
+		 * @throws \Exception
+		 */
+		public function generateNewHtmlSection( $post_id ): string {
+			return $this->generateForm( $post_id );
+		}
+
 		protected function createDescriptionLink(): string {
 			return wpcf7_link(
 				__( 'https://contactform7.com/editing-form-template/', 'contact-form-7' ),
@@ -19,8 +26,11 @@
 			return sprintf( esc_html( $description ), $descLink );
 		}
 
+		/**
+		 * @throws \Exception
+		 */
 		protected function createTitle(): string {
-			return esc_html( __( 'Form', 'contact-form-7' ) );
+			return esc_html( __( 'Step', 'contact-form-7' ) );
 		}
 
 		protected function generateTagButtons(): string {
@@ -32,16 +42,11 @@
 		}
 
 		protected function generateTextArea( $post ): string {
-			// print $post to debug in error log
-
 			if ( ! isset( $post['_form'] ) ) {
 				throw new UnexpectedValueException( 'Post has no form property' );
 			}
 
 			return esc_textarea( $post['_form'][0] );
 		}
-
-		public function generateNewHtmlSection( $post ): string {
-			return $this->generateForm( $post );
-		}
+		
 	}

@@ -30,7 +30,7 @@ document.querySelector('.cf7lms-add-step')?.addEventListener('click', (e: Event)
         .then((resp: ResponseData) => {
             if (resp.success) {
                 console.log(resp);
-                const formContainer: HTMLElement | null = document.querySelector('.cf7lms-step-wrapper');
+                const formContainer: HTMLElement | null = document.querySelector('.cf7lms-steps-wrapper');
                 let wrap = document.createElement('div');
                 // append wrap after formContainer
                 formContainer?.parentNode?.insertBefore(wrap, formContainer.nextSibling);

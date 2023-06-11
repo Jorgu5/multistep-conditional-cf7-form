@@ -12,9 +12,10 @@
 			$this->formGenerator = $formGenerator;
 		}
 
+		/**
+		 * @throws \Exception
+		 */
 		public function execute( int $post_id ): string {
-			$post = get_post_meta( $post_id );
-
-			return $this->formGenerator->generateNewHtmlSection( $post );
+			return $this->formGenerator->generateNewHtmlSection( $post_id );
 		}
 	}
